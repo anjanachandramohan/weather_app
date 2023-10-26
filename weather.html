@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+</head>
+
+    <body style="background-image: url(https://img.freepik.com/free-vector/blue-sky-with-shiny-clouds-background_1017-23279.jpg?w=360); background-repeat: no-repeat; background-size: cover;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <h1 class="text-center mt-5 text-white">Weather</h1>
+                    <div class="d-flex mt-5">
+                        <input id="input" type="text" placeholder="Enter city name" class="form-control">
+                        <input onclick="search()" type="button" value="search" class="btn btn-primary ms-3 text-white">
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+                     <div id="result">
+    
+                     </div>
+                    </div>
+                    <div class="col-md-3"></div>
+               
+            </div>
+        </div>
+    </body>
+    <script>
+        
+        function search(){
+       let cityname = input.value 
+       console.log(cityname);
+    
+       const http = new XMLHttpRequest()
+       
+       
+       http.open('get',`https://api.openweathermap.org/data/2.5/weather?q=${cityname}&appid=4fe97e8b597eb21dfb41b3907552a32b`)
+
+       
+       http.send()
+       console.log(http.readyState)
+       http.onreadystatechange = () =>{
+        console.log(http.readyState)
+        if(http.readyState ==4){
+            if(http.status>=200 && http.status<300){
+                console.log(http.responseText);
+                let data=JSON.parse(http.responseText)
+                console.log(data);
+                let temp = data.main.temp-273.15
+                console.log(Math.round(temp));
+               
+                let pressure = data.main.pressure
+                console.log(pressure);
+                let humidity = data.main.humidity
+                console.log(humidity);
+                let wind_speed= data.wind.speed
+                console.log(wind_speed);
+                let country = data.sys.country
+                console.log(country);
+                
+               let city_name = data.name
+                console.log(city_name);
+                var dt = Date()
+                console.log(dt);
+               let weather = data.weather
+               console.log(weather);
+
+              result.innerHTML = `
+              <div class="details mb-5 mt-5">
+              <h2 class="city" >${city_name} ,${country} </h2>
+              <h1 class="temp">${Math.round(temp)} ℃ , ${weather.map((item)=>`${item.main}`)}</h1>
+              <h3 class="time">${dt}</h3>
+              
+              </div>
+              
+              <div class="item">
+            <h4 class="pressure">pressure:${pressure} pa</li>
+            <h4 class="humidity">humidity:${humidity} %</li>
+            <h4 class="wind speed">wind speed:${wind_speed} kmph</li>
+            </div>
+              
+              `
+              
+            }
+            else{
+                console.log('no response');
+            }
+        }
+       }
+    }
+    </script>
+
+</html>
